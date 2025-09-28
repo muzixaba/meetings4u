@@ -69,7 +69,7 @@ const RepEarnings = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Earnings Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
         <Card>
           <Card.Content className="p-6">
             <div className="flex items-center">
