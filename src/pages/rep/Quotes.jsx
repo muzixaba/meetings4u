@@ -10,17 +10,17 @@ import { meetingTypes } from '../../data/mockData';
 const RepQuotes = () => {
   const { myQuotes, getQuotesByStatus, updateQuote, withdrawQuote } = useRepStore();
   const { jobs } = useJobsStore();
-  const [activeTab, setActiveTab] = useState('pending');
+  const [activeTab, setActiveTab] = useState('all');
 
   const pendingQuotes = getQuotesByStatus('pending');
   const acceptedQuotes = getQuotesByStatus('accepted');
   const rejectedQuotes = getQuotesByStatus('rejected');
 
   const tabs = [
+    { id: 'all', label: 'All Quotes', count: myQuotes.length },
     { id: 'pending', label: 'Pending', count: pendingQuotes.length },
     { id: 'accepted', label: 'Accepted', count: acceptedQuotes.length },
-    { id: 'rejected', label: 'Rejected', count: rejectedQuotes.length },
-    { id: 'all', label: 'All Quotes', count: myQuotes.length }
+    { id: 'rejected', label: 'Rejected', count: rejectedQuotes.length }
   ];
 
   const getQuotesToShow = () => {
@@ -64,27 +64,40 @@ const RepQuotes = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
+      <div className="mt-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Quotes</h1>
-        <p className="text-gray-600">Manage and track your submitted quotes</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-4 gap-6">
         {tabs.map(({ id, label, count }) => {
           const getCardStyle = () => {
-            const baseStyle = 'cursor-pointer transition-all';
-            const activeStyle = activeTab === id ? 'ring-2 ring-primary-500' : 'hover:shadow-md';
+            const baseStyle = 'cursor-pointer transition-all bg-white border border-gray-200';
 
-            switch (id) {
-              case 'pending':
-                return `${baseStyle} ${activeStyle} bg-yellow-50 hover:bg-yellow-100 ${activeTab === id ? '!bg-yellow-100' : ''}`;
-              case 'accepted':
-                return `${baseStyle} ${activeStyle} bg-green-50 hover:bg-green-100 ${activeTab === id ? '!bg-green-100' : ''}`;
-              case 'rejected':
-                return `${baseStyle} ${activeStyle} bg-red-50 hover:bg-red-100 ${activeTab === id ? '!bg-red-100' : ''}`;
-              default: // all
-                return `${baseStyle} ${activeStyle} bg-blue-50 hover:bg-blue-100 ${activeTab === id ? '!bg-blue-100' : ''}`;
+            if (activeTab === id) {
+              // Selected state with colored background
+              switch (id) {
+                case 'pending':
+                  return `${baseStyle} ring-2 ring-yellow-500 bg-yellow-50`;
+                case 'accepted':
+                  return `${baseStyle} ring-2 ring-green-500 bg-green-50`;
+                case 'rejected':
+                  return `${baseStyle} ring-2 ring-red-500 bg-red-50`;
+                default: // all
+                  return `${baseStyle} ring-2 ring-blue-500 bg-blue-50`;
+              }
+            } else {
+              // Default white background with hover states
+              switch (id) {
+                case 'pending':
+                  return `${baseStyle} hover:bg-yellow-50 hover:border-yellow-300`;
+                case 'accepted':
+                  return `${baseStyle} hover:bg-green-50 hover:border-green-300`;
+                case 'rejected':
+                  return `${baseStyle} hover:bg-red-50 hover:border-red-300`;
+                default: // all
+                  return `${baseStyle} hover:bg-blue-50 hover:border-blue-300`;
+              }
             }
           };
 
@@ -117,159 +130,152 @@ const RepQuotes = () => {
       </div>
 
       {/* Quotes List */}
-      <Card>
-        <Card.Header>
-          <h2 className="text-lg font-semibold text-gray-900">
-            {tabs.find(t => t.id === activeTab)?.label} ({quotesToShow.length})
-          </h2>
-        </Card.Header>
-        <Card.Content>
-          {quotesToShow.length === 0 ? (
-            <div className="text-center py-12">
-              <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No {activeTab === 'all' ? '' : activeTab} quotes found
-              </h3>
-              <p className="text-gray-600">
-                {activeTab === 'pending' && "You don't have any pending quotes at the moment."}
-                {activeTab === 'accepted' && "No quotes have been accepted yet."}
-                {activeTab === 'rejected' && "No quotes have been rejected."}
-                {activeTab === 'all' && "You haven't submitted any quotes yet."}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {quotesToShow.map((quote) => {
-                const job = getJobDetails(quote.jobId);
-                if (!job) return null;
+      <div>
+        {quotesToShow.length === 0 ? (
+          <div className="text-center py-12">
+            <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No {activeTab === 'all' ? '' : activeTab} quotes found
+            </h3>
+            <p className="text-gray-600">
+              {activeTab === 'pending' && "You don't have any pending quotes at the moment."}
+              {activeTab === 'accepted' && "No quotes have been accepted yet."}
+              {activeTab === 'rejected' && "No quotes have been rejected."}
+              {activeTab === 'all' && "You haven't submitted any quotes yet."}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {quotesToShow.map((quote) => {
+              const job = getJobDetails(quote.jobId);
+              if (!job) return null;
 
-                return (
-                  <div key={quote.id} className="border border-gray-200 rounded-lg p-6">
-                    {/* Quote Header */}
-                    <div className="flex items-start justify-between mb-4">
+              return (
+                <div key={quote.id} className="bg-white border border-gray-200 rounded-lg p-6">
+                  {/* Quote Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {getMeetingTypeLabel(job.meetingType)}
+                        </h3>
+                        <Badge variant={getStatusVariant(quote.status)}>
+                          {quote.status}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 space-x-4">
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          {new Date(job.dateTime).toLocaleString()}
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {job.location.address}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-gray-900">
+                        {formatCurrency(quote.amount)}
+                      </p>
+                      <p className="text-sm text-gray-600">Your Quote</p>
+                    </div>
+                  </div>
+
+                  {/* Quote Details */}
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center text-gray-600">
+                      <Car className="h-5 w-5 mr-3" />
                       <div>
-                        <div className="flex items-center space-x-2 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {getMeetingTypeLabel(job.meetingType)}
-                          </h3>
-                          <Badge variant={getStatusVariant(quote.status)}>
-                            {quote.status}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600 space-x-4">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {new Date(job.dateTime).toLocaleString()}
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            {job.location.address}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-gray-900">
-                          {formatCurrency(quote.amount)}
-                        </p>
-                        <p className="text-sm text-gray-600">Your Quote</p>
-                      </div>
-                    </div>
-
-                    {/* Quote Details */}
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div className="flex items-center text-gray-600">
-                        <Car className="h-5 w-5 mr-3" />
-                        <div>
-                          <p className="font-medium text-gray-900">Transportation</p>
-                          <p className="text-sm">
-                            {quote.transportation.method.replace('_', ' ')} - {quote.transportation.details}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="h-5 w-5 mr-3" />
-                        <div>
-                          <p className="font-medium text-gray-900">Arrival Details</p>
-                          <p className="text-sm">
-                            Expected: {quote.estimatedArrival.time}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Travel time: {quote.estimatedArrival.travelDuration}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Special Considerations */}
-                    {quote.specialConsiderations && quote.specialConsiderations.length > 0 && (
-                      <div className="mb-4">
-                        <p className="font-medium text-gray-900 mb-2">Special Considerations</p>
-                        <div className="flex flex-wrap gap-2">
-                          {quote.specialConsiderations.map((consideration, index) => (
-                            <Badge key={index} variant="info" size="sm">
-                              {consideration}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Additional Notes */}
-                    {quote.additionalNotes && (
-                      <div className="mb-4">
-                        <p className="font-medium text-gray-900 mb-1">Additional Notes</p>
-                        <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
-                          {quote.additionalNotes}
+                        <p className="font-medium text-gray-900">Transportation</p>
+                        <p className="text-sm">
+                          {quote.transportation.method.replace('_', ' ')} - {quote.transportation.details}
                         </p>
                       </div>
-                    )}
-
-                    {/* Quote Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <div className="text-sm text-gray-600">
-                        <p>Submitted: {new Date(quote.quotedAt).toLocaleString()}</p>
-                        <p>Valid until: {new Date(quote.validUntil).toLocaleString()}</p>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        {quote.status === 'pending' && (
-                          <>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4 mr-1" />
-                              Edit Quote
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => handleWithdrawQuote(quote.id)}
-                            >
-                              <X className="h-4 w-4 mr-1" />
-                              Withdraw
-                            </Button>
-                          </>
-                        )}
-
-                        {quote.status === 'accepted' && (
-                          <Button variant="primary" size="sm">
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            View Assignment
-                          </Button>
-                        )}
-
-                        {quote.status === 'rejected' && (
-                          <Button variant="outline" size="sm">
-                            Submit New Quote
-                          </Button>
-                        )}
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Clock className="h-5 w-5 mr-3" />
+                      <div>
+                        <p className="font-medium text-gray-900">Arrival Details</p>
+                        <p className="text-sm">
+                          Expected: {quote.estimatedArrival.time}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Travel time: {quote.estimatedArrival.travelDuration}
+                        </p>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </Card.Content>
-      </Card>
+
+                  {/* Special Considerations */}
+                  {quote.specialConsiderations && quote.specialConsiderations.length > 0 && (
+                    <div className="mb-4">
+                      <p className="font-medium text-gray-900 mb-2">Special Considerations</p>
+                      <div className="flex flex-wrap gap-2">
+                        {quote.specialConsiderations.map((consideration, index) => (
+                          <Badge key={index} variant="info" size="sm">
+                            {consideration}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Additional Notes */}
+                  {quote.additionalNotes && (
+                    <div className="mb-4">
+                      <p className="font-medium text-gray-900 mb-1">Additional Notes</p>
+                      <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                        {quote.additionalNotes}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Quote Footer */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-600">
+                      <p>Submitted: {new Date(quote.quotedAt).toLocaleString()}</p>
+                      <p>Valid until: {new Date(quote.validUntil).toLocaleString()}</p>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      {quote.status === 'pending' && (
+                        <>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit Quote
+                          </Button>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleWithdrawQuote(quote.id)}
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Withdraw
+                          </Button>
+                        </>
+                      )}
+
+                      {quote.status === 'accepted' && (
+                        <Button variant="primary" size="sm">
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          View Assignment
+                        </Button>
+                      )}
+
+                      {quote.status === 'rejected' && (
+                        <Button variant="outline" size="sm">
+                          Submit New Quote
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
     </div>
   );

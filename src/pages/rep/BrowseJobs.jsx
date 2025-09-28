@@ -48,9 +48,8 @@ const BrowseJobs = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Browse Available Jobs</h1>
-        <p className="text-gray-600">Find meeting representation opportunities in your area</p>
+      <div className="mt-6">
+        <h1 className="text-2xl font-bold text-gray-900">Available Jobs</h1>
       </div>
 
       {/* Filters */}

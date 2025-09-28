@@ -1,13 +1,6 @@
 import React from 'react';
-import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import { mockAssignments, mockUsers, mockJobs, mockEntities } from '../../data/mockData';
-
-const TABS = [
-  { key: 'upcoming', label: 'Upcoming' },
-  { key: 'in_progress', label: 'In Progress' },
-  { key: 'completed', label: 'Completed' },
-];
 
 const StatusBadge = ({ status }) => {
   const colors = {
@@ -109,49 +102,35 @@ const AssignmentCard = ({ item }) => {
 };
 
 const RepAssignments = () => {
-  const [activeTab, setActiveTab] = React.useState('upcoming');
-
-  const filtered = mockAssignments.filter(a => {
-    if (activeTab === 'upcoming') return a.status === 'in_progress' || a.status === 'upcoming';
-    return a.status === activeTab;
-  }).map(a => {
-    // derive 'upcoming' if assigned but completionReport null and start date in future
-    if (a.status === 'in_progress' && new Date(a.meetingDetails?.dateTime) > new Date()) {
-      return { ...a, status: 'upcoming' };
-    }
-    return a;
-  }).filter(a => a.status === activeTab);
+  // Get all assignments and sort by meeting date
+  const sortedAssignments = mockAssignments
+    .map(a => {
+      // derive 'upcoming' if assigned but completionReport null and start date in future
+      if (a.status === 'in_progress' && new Date(a.meetingDetails?.dateTime) > new Date()) {
+        return { ...a, status: 'upcoming' };
+      }
+      return a;
+    })
+    .sort((a, b) => {
+      // Sort by meeting date - earliest first
+      const dateA = new Date(a.meetingDetails?.dateTime || 0);
+      const dateB = new Date(b.meetingDetails?.dateTime || 0);
+      return dateA - dateB;
+    });
 
   return (
     <div className="max-w-5xl mx-auto">
-      <Card>
-        <Card.Header>
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">My Assignments</h1>
-            <div className="flex items-center gap-2">
-              {TABS.map(t => (
-                <button
-                  key={t.key}
-                  className={`px-3 py-1.5 text-sm rounded border ${activeTab === t.key ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
-                  onClick={() => setActiveTab(t.key)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </Card.Header>
-        <Card.Content>
-          <div className="space-y-3">
-            {filtered.length === 0 && (
-              <div className="text-center text-gray-500 py-10">No assignments in this tab.</div>
-            )}
-            {filtered.map(item => (
-              <AssignmentCard key={item.id} item={item} />
-            ))}
-          </div>
-        </Card.Content>
-      </Card>
+      <div className="mt-6 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">My Assignments</h1>
+      </div>
+      <div className="space-y-3">
+        {sortedAssignments.length === 0 && (
+          <div className="text-center text-gray-500 py-10">No assignments found.</div>
+        )}
+        {sortedAssignments.map(item => (
+          <AssignmentCard key={item.id} item={item} />
+        ))}
+      </div>
     </div>
   );
 };

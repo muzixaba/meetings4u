@@ -12,7 +12,8 @@ import {
   Bell,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
+  HelpCircle
 } from 'lucide-react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
@@ -26,10 +27,8 @@ const SidePanel = () => {
   const { user, logout } = useAuthStore();
   const {
     sidePanel,
-    toggleSidePanel,
     setSidePanelCollapsed,
     setSidePanelOpen,
-    notifications,
     getUnreadNotificationsCount
   } = useUIStore();
   const { selectedEntity } = useEntitiesStore();
@@ -224,6 +223,17 @@ const SidePanel = () => {
         {/* Bottom Actions */}
         <div className="p-4 border-t border-gray-200">
           <div className="space-y-1">
+            <button
+              className={`
+                flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors
+                ${sidePanel.collapsed ? 'justify-center' : ''}
+              `}
+              title={sidePanel.collapsed ? 'Help Center' : undefined}
+            >
+              <HelpCircle className={`h-5 w-5 ${sidePanel.collapsed ? '' : 'mr-3'}`} />
+              {!sidePanel.collapsed && 'Help Center'}
+            </button>
+
             <button
               className={`
                 flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors
