@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
-import { mockAssignments } from '../../data/mockData';
+import { mockAssignments, mockUsers, mockJobs, mockEntities } from '../../data/mockData';
 
 const TABS = [
   { key: 'upcoming', label: 'Upcoming' },
@@ -23,6 +23,13 @@ const StatusBadge = ({ status }) => {
 };
 
 const AssignmentCard = ({ item }) => {
+  // Get client details
+  const client = mockUsers.find(user => user.id === item.clientId);
+
+  // Get job details to find the entity
+  const job = mockJobs.find(job => job.id === item.jobId);
+  const entity = job ? mockEntities.find(entity => entity.id === job.selectedEntityId) : null;
+
   return (
     <div className="border rounded-lg p-4 bg-white">
       <div className="flex items-start justify-between">
@@ -47,7 +54,8 @@ const AssignmentCard = ({ item }) => {
           <div className="text-sm text-gray-500">Meeting Details</div>
           <div className="mt-1">
             <div className="text-sm"><span className="text-gray-500">Type:</span> <span className="font-medium">{item.meetingDetails?.type}</span></div>
-            <div className="text-sm"><span className="text-gray-500">Date/Time:</span> <span className="font-medium">{item.meetingDetails?.dateTime}</span></div>
+            <div className="text-sm"><span className="text-gray-500">Date:</span> <span className="font-medium">{new Date(item.meetingDetails?.dateTime).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+            <div className="text-sm"><span className="text-gray-500">Time:</span> <span className="font-medium">{new Date(item.meetingDetails?.dateTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</span></div>
             <div className="text-sm"><span className="text-gray-500">Location:</span> <span className="font-medium">{item.meetingDetails?.location}</span></div>
           </div>
         </div>
@@ -64,9 +72,10 @@ const AssignmentCard = ({ item }) => {
           </div>
         </div>
         <div className="bg-gray-50 rounded p-3 border">
-          <div className="text-sm text-gray-500">Client</div>
+          <div className="text-sm text-gray-500">Client & Entity</div>
           <div className="mt-1 text-sm space-y-1">
-            <div><span className="text-gray-500">Client ID:</span> <span className="font-medium">{item.clientId}</span></div>
+            <div><span className="text-gray-500">Client:</span> <span className="font-medium">{client?.profile?.name || 'Unknown Client'}</span></div>
+            <div><span className="text-gray-500">Entity:</span> <span className="font-medium">{entity?.name || 'Unknown Entity'}</span></div>
             {item.status !== 'upcoming' && (
               <div className="text-xs text-gray-500">Contact details available after confirmation</div>
             )}
@@ -75,6 +84,7 @@ const AssignmentCard = ({ item }) => {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
+        <Button variant="outline">View Job Summary</Button>
         {item.status === 'upcoming' && (
           <>
             <Button variant="primary">Confirm Attendance</Button>

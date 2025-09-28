@@ -71,20 +71,49 @@ const RepQuotes = () => {
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-4 gap-6">
-        {tabs.map(({ id, label, count }) => (
-          <Card
-            key={id}
-            className={`cursor-pointer transition-all ${
-              activeTab === id ? 'ring-2 ring-primary-500 bg-primary-50' : 'hover:shadow-md'
-            }`}
-            onClick={() => setActiveTab(id)}
-          >
-            <Card.Content className="text-center p-6">
-              <p className="text-2xl font-bold text-gray-900">{count}</p>
-              <p className="text-sm font-medium text-gray-600">{label}</p>
-            </Card.Content>
-          </Card>
-        ))}
+        {tabs.map(({ id, label, count }) => {
+          const getCardStyle = () => {
+            const baseStyle = 'cursor-pointer transition-all';
+            const activeStyle = activeTab === id ? 'ring-2 ring-primary-500' : 'hover:shadow-md';
+
+            switch (id) {
+              case 'pending':
+                return `${baseStyle} ${activeStyle} bg-yellow-50 hover:bg-yellow-100 ${activeTab === id ? '!bg-yellow-100' : ''}`;
+              case 'accepted':
+                return `${baseStyle} ${activeStyle} bg-green-50 hover:bg-green-100 ${activeTab === id ? '!bg-green-100' : ''}`;
+              case 'rejected':
+                return `${baseStyle} ${activeStyle} bg-red-50 hover:bg-red-100 ${activeTab === id ? '!bg-red-100' : ''}`;
+              default: // all
+                return `${baseStyle} ${activeStyle} bg-blue-50 hover:bg-blue-100 ${activeTab === id ? '!bg-blue-100' : ''}`;
+            }
+          };
+
+          const getTextColor = () => {
+            switch (id) {
+              case 'pending':
+                return 'text-yellow-600';
+              case 'accepted':
+                return 'text-green-600';
+              case 'rejected':
+                return 'text-red-600';
+              default: // all
+                return 'text-blue-600';
+            }
+          };
+
+          return (
+            <Card
+              key={id}
+              className={getCardStyle()}
+              onClick={() => setActiveTab(id)}
+            >
+              <Card.Content className="text-center p-6">
+                <p className={`text-2xl font-bold ${getTextColor()}`}>{count}</p>
+                <p className="text-sm font-medium text-gray-600">{label}</p>
+              </Card.Content>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Quotes List */}
@@ -242,39 +271,6 @@ const RepQuotes = () => {
         </Card.Content>
       </Card>
 
-      {/* Summary Stats */}
-      {myQuotes.length > 0 && (
-        <Card>
-          <Card.Header>
-            <h3 className="text-lg font-semibold text-gray-900">Quote Statistics</h3>
-          </Card.Header>
-          <Card.Content>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <p className="text-2xl font-bold text-blue-600">{myQuotes.length}</p>
-                <p className="text-sm text-gray-600">Total Quotes</p>
-              </div>
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                <p className="text-2xl font-bold text-yellow-600">{pendingQuotes.length}</p>
-                <p className="text-sm text-gray-600">Pending</p>
-              </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">{acceptedQuotes.length}</p>
-                <p className="text-sm text-gray-600">Accepted</p>
-              </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <p className="text-2xl font-bold text-purple-600">
-                  {acceptedQuotes.length > 0
-                    ? Math.round((acceptedQuotes.length / myQuotes.length) * 100)
-                    : 0
-                  }%
-                </p>
-                <p className="text-sm text-gray-600">Success Rate</p>
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
-      )}
     </div>
   );
 };

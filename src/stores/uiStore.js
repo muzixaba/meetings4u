@@ -21,6 +21,11 @@ export const useUIStore = create((set, get) => ({
     auth: false
   },
 
+  sidePanel: {
+    open: false,
+    collapsed: false
+  },
+
   // Actions
   openModal: (modalName, props = {}) => set((state) => ({
     modals: {
@@ -61,6 +66,18 @@ export const useUIStore = create((set, get) => ({
 
   setLoading: (key, isLoading) => set((state) => ({
     loading: { ...state.loading, [key]: isLoading }
+  })),
+
+  toggleSidePanel: () => set((state) => ({
+    sidePanel: { ...state.sidePanel, open: !state.sidePanel.open }
+  })),
+
+  setSidePanelOpen: (open) => set((state) => ({
+    sidePanel: { ...state.sidePanel, open }
+  })),
+
+  setSidePanelCollapsed: (collapsed) => set((state) => ({
+    sidePanel: { ...state.sidePanel, collapsed }
   })),
 
   // Computed getters

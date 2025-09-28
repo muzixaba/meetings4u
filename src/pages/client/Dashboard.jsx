@@ -83,8 +83,8 @@ const ClientDashboard = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <Card>
+      {/* Quick Actions - Hidden on large screens where side panel is available */}
+      <Card className="lg:hidden">
         <Card.Header>
           <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
         </Card.Header>

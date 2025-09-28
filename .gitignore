@@ -93,6 +93,9 @@ dist
 tmp/
 temp/
 
+# Playwright
+.playwright-mcp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

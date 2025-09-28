@@ -4,7 +4,6 @@ import { Calendar, DollarSign, MapPin, TrendingUp, User, Star, Clock, CheckCircl
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import Avatar from '../../components/ui/Avatar';
 import { useAuthStore } from '../../stores/authStore';
 import { useRepStore } from '../../stores/repStore';
 
@@ -64,38 +63,8 @@ const RepDashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="flex items-center space-x-4">
-        <Avatar
-          src={user?.profile?.profilePhoto?.url}
-          alt={user?.profile?.name || user?.email}
-          size="lg"
-          fallbackText={user?.profile?.name || user?.email}
-        />
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {user?.profile?.name || 'Representative'}
-          </h1>
-          <div className="flex items-center space-x-4 mt-1">
-            <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="text-sm font-medium text-gray-900">{rating}</span>
-              <span className="text-sm text-gray-600">rating</span>
-            </div>
-            <span className="text-sm text-gray-600">•</span>
-            <span className="text-sm text-gray-600">
-              {profile.statistics.completedJobs} jobs completed
-            </span>
-            <span className="text-sm text-gray-600">•</span>
-            <span className="text-sm text-gray-600">
-              {completionRate}% completion rate
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Stats Cards */}
-      <div className="grid md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-4 gap-6 pt-8">
         {stats.map(({ label, value, icon: Icon, color, link }) => (
           <Link key={label} to={link}>
             <Card className="hover:shadow-md transition-shadow cursor-pointer">
@@ -113,8 +82,8 @@ const RepDashboard = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <Card>
+      {/* Quick Actions - Hidden on large screens where side panel is available */}
+      <Card className="lg:hidden">
         <Card.Header>
           <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
         </Card.Header>
@@ -153,7 +122,7 @@ const RepDashboard = () => {
         <Card>
           <Card.Header>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Available Jobs</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Available Jobs</h2>
               <Link to="/rep/jobs">
                 <Button variant="ghost" size="sm">
                   View All

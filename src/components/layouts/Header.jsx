@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, LogOut, Settings } from 'lucide-react';
+import { Bell, LogOut, Settings, Menu } from 'lucide-react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import Avatar from '../ui/Avatar';
@@ -10,7 +10,7 @@ import { useUIStore } from '../../stores/uiStore';
 const Header = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
-  const { notifications, getUnreadNotificationsCount } = useUIStore();
+  const { notifications, getUnreadNotificationsCount, toggleSidePanel } = useUIStore();
 
   const unreadCount = getUnreadNotificationsCount();
 
@@ -47,11 +47,24 @@ const Header = () => {
   const navItems = getNavItems();
 
   return (
-    <header className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-20">
+      <div className={`px-4 sm:px-6 lg:px-8 ${user ? '' : 'max-w-7xl mx-auto'}`}>
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center">
+          {/* Left side - Menu toggle + Logo */}
+          <div className="flex items-center space-x-4">
+            {/* Mobile menu toggle */}
+            {user && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSidePanel}
+                className="lg:hidden p-2"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
+
+            {/* Logo */}
             <Link to="/" className="flex items-center">
               <div className="bg-primary-500 text-white px-3 py-2 rounded-lg font-bold text-xl">
                 M4U
@@ -59,9 +72,9 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Navigation */}
+          {/* Navigation - Hidden on large screens when side panel is available */}
           {user && (
-            <nav className="hidden md:flex space-x-8">
+            <nav className="hidden md:flex lg:hidden space-x-8">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
