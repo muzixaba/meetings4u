@@ -229,34 +229,28 @@ const ClientEntities = () => {
   const handleSetDefault = (id) => setDefault(id);
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <Card>
-        <Card.Header>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manage Entities</h1>
-              <p className="text-gray-600">Add, update, and manage your entities.</p>
-            </div>
-            <Button variant="primary" onClick={openCreate}>Add New Entity</Button>
-          </div>
-        </Card.Header>
-        <Card.Content>
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded">{error}</div>
-          )}
-          <div className="space-y-3">
-            {entities.map((entity) => (
-              <EntityRow
-                key={entity.id}
-                entity={entity}
-                onEdit={openEdit}
-                onDelete={handleDelete}
-                onSetDefault={handleSetDefault}
-              />
-            ))}
-          </div>
-        </Card.Content>
-      </Card>
+    <div className="mt-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Manage Entities</h1>
+        </div>
+        <Button variant="primary" onClick={openCreate}>Add New Entity</Button>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded">{error}</div>
+      )}
+      <div className="space-y-3">
+        {entities.map((entity) => (
+          <EntityRow
+            key={entity.id}
+            entity={entity}
+            onEdit={openEdit}
+            onDelete={handleDelete}
+            onSetDefault={handleSetDefault}
+          />
+        ))}
+      </div>
 
       <EntityModal
         open={modalOpen}

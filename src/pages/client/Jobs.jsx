@@ -58,12 +58,11 @@ const ClientJobs = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mt-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1>
-          <p className="text-gray-600">Manage your meeting representation requests</p>
         </div>
         <Link to="/client/post-job">
           <Button>
