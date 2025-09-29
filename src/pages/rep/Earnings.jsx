@@ -57,7 +57,7 @@ const RepEarnings = () => {
 
     if (timeFilter === 'month') {
       return transactionDate.getMonth() === now.getMonth() &&
-             transactionDate.getFullYear() === now.getFullYear();
+        transactionDate.getFullYear() === now.getFullYear();
     }
     if (timeFilter === 'quarter') {
       const quarterStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
@@ -67,7 +67,7 @@ const RepEarnings = () => {
   });
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-5xl space-y-6">
       {/* Header */}
       <div className="mt-6">
         <h1 className="text-2xl font-bold text-gray-900">Earnings</h1>
@@ -199,9 +199,8 @@ const RepEarnings = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className={`text-lg font-semibold ${
-                        transaction.amount > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
+                      <div className={`text-lg font-semibold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'
+                        }`}>
                         {transaction.amount > 0 ? '+' : ''}R{Math.abs(transaction.amount).toFixed(2)}
                       </div>
                       <StatusBadge status={transaction.status} />

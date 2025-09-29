@@ -607,10 +607,8 @@ const PostJob = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-6">Post New Job</h1>
       <Card>
-        <Card.Header>
-          <h1 className="text-2xl font-bold text-gray-900">Post New Job</h1>
-        </Card.Header>
         <Card.Content>
           <Stepper currentStep={currentStep} />
           <div className="min-h-[300px] flex items-center justify-center text-gray-400">

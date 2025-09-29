@@ -58,6 +58,7 @@ const SidePanel = () => {
         { label: 'Browse Jobs', path: '/rep/jobs', icon: Calendar },
         { label: 'My Quotes', path: '/rep/quotes', icon: FileText },
         { label: 'Assignments', path: '/rep/assignments', icon: Users },
+        { label: 'Messages', path: '/rep/messages', icon: MessageSquare },
         { label: 'Earnings', path: '/rep/earnings', icon: DollarSign }
       ];
     }

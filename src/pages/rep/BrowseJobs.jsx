@@ -46,69 +46,75 @@ const BrowseJobs = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-5xl space-y-6">
       {/* Header */}
       <div className="mt-6">
-        <h1 className="text-2xl font-bold text-gray-900">Available Jobs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Available Jobs ({filteredJobs.length})</h1>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <Card.Header>
-          <h2 className="text-lg font-semibold text-gray-900">Filter Jobs</h2>
-        </Card.Header>
-        <Card.Content>
-          <div className="grid md:grid-cols-4 gap-4">
-            <Select
-              label="Meeting Type"
-              value={filters.meetingType || ''}
-              onChange={(e) => updateFilters({ meetingType: e.target.value || null })}
-              options={meetingTypeOptions}
-            />
-            <Input
-              label="Minimum Fee (R)"
-              type="number"
-              placeholder="150"
-              value={filters.minFee || ''}
-              onChange={(e) => updateFilters({ minFee: e.target.value ? parseInt(e.target.value) : null })}
-            />
-            <Input
-              label="Max Distance (km)"
-              type="number"
-              placeholder="50"
-              value={filters.distance || ''}
-              onChange={(e) => updateFilters({ distance: e.target.value ? parseInt(e.target.value) : 50 })}
-            />
-            <div className="flex items-end">
-              <Button
-                variant="outline"
-                onClick={() => updateFilters({ meetingType: null, minFee: null, distance: 50 })}
-                className="w-full"
-              >
-                Clear Filters
-              </Button>
+      {/* Filters and Order */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <Card className="lg:col-span-3">
+          <Card.Header>
+            <h2 className="text-lg font-semibold text-gray-900">Filter Jobs</h2>
+          </Card.Header>
+          <Card.Content>
+            <div className="grid md:grid-cols-4 gap-4">
+              <Select
+                label="Meeting Type"
+                value={filters.meetingType || ''}
+                onChange={(e) => updateFilters({ meetingType: e.target.value || null })}
+                options={meetingTypeOptions}
+              />
+              <Input
+                label="Minimum Fee (R)"
+                type="number"
+                placeholder="150"
+                value={filters.minFee || ''}
+                onChange={(e) => updateFilters({ minFee: e.target.value ? parseInt(e.target.value) : null })}
+              />
+              <Input
+                label="Max Distance (km)"
+                type="number"
+                placeholder="50"
+                value={filters.distance || ''}
+                onChange={(e) => updateFilters({ distance: e.target.value ? parseInt(e.target.value) : 50 })}
+              />
+              <div className="flex items-end">
+                <Button
+                  variant="outline"
+                  onClick={() => updateFilters({ meetingType: null, minFee: null, distance: 50 })}
+                  className="w-full"
+                >
+                  Clear Filters
+                </Button>
+              </div>
             </div>
-          </div>
-        </Card.Content>
-      </Card>
+          </Card.Content>
+        </Card>
+
+        <Card className="lg:col-span-1">
+          <Card.Header>
+            <h2 className="text-lg font-semibold text-gray-900">Order</h2>
+          </Card.Header>
+          <Card.Content>
+            <Select
+              label="Sort By"
+              options={[
+                { value: 'date_asc', label: 'Date: Earliest First' },
+                { value: 'date_desc', label: 'Date: Latest First' },
+                { value: 'fee_asc', label: 'Fee: Low to High' },
+                { value: 'fee_desc', label: 'Fee: High to Low' },
+                { value: 'distance', label: 'Distance: Nearest First' }
+              ]}
+              placeholder="Sort by..."
+            />
+          </Card.Content>
+        </Card>
+      </div>
 
       {/* Jobs List */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} found
-          </p>
-          <Select
-            options={[
-              { value: 'date_asc', label: 'Date: Earliest First' },
-              { value: 'date_desc', label: 'Date: Latest First' },
-              { value: 'fee_asc', label: 'Fee: Low to High' },
-              { value: 'fee_desc', label: 'Fee: High to Low' },
-              { value: 'distance', label: 'Distance: Nearest First' }
-            ]}
-            placeholder="Sort by..."
-          />
-        </div>
 
         {filteredJobs.length === 0 ? (
           <Card>

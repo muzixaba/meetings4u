@@ -62,7 +62,7 @@ const RepQuotes = () => {
   const quotesToShow = getQuotesToShow();
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-5xl space-y-6">
       {/* Header */}
       <div className="mt-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Quotes</h1>

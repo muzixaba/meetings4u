@@ -25,9 +25,9 @@ const ClientDashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl space-y-6">
       {/* Welcome Section */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 mt-6 mb-6">
         <Avatar
           src={user?.profile?.profilePhoto?.url}
           alt={user?.profile?.name || user?.email}
@@ -154,7 +154,7 @@ const ClientDashboard = () => {
                       <Badge
                         variant={
                           job.status === 'open' ? 'accent' :
-                          job.status === 'in_progress' ? 'primary' : 'success'
+                            job.status === 'in_progress' ? 'primary' : 'success'
                         }
                         size="sm"
                       >

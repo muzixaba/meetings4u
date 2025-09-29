@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, DollarSign, MapPin, TrendingUp, User, Star, Clock, CheckCircle } from 'lucide-react';
+import { Calendar, DollarSign, MapPin, TrendingUp, User, Star, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
+import Avatar from '../../components/ui/Avatar';
 import { useAuthStore } from '../../stores/authStore';
 import { useRepStore } from '../../stores/repStore';
 
@@ -62,20 +63,55 @@ const RepDashboard = () => {
   const formatCurrency = (amount) => `R${amount.toFixed(2)}`;
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl space-y-6">
+      {/* Welcome Section */}
+      <div className="flex items-center space-x-4 mt-6 mb-6">
+        <Avatar
+          src={user?.profile?.profilePhoto?.url}
+          alt={user?.profile?.name || user?.email}
+          size="lg"
+          fallbackText={user?.profile?.name || user?.email}
+        />
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Welcome back, {user?.profile?.name || 'Rep'}
+          </h1>
+          <p className="text-gray-600">
+            Rating: <span className="font-medium">{rating}/5</span> • Completion Rate: <span className="font-medium">{completionRate}%</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Phone Verification Banner */}
+      {!user?.phone_verified && (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <Card.Content className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-3">
+              <AlertCircle className="h-5 w-5 text-yellow-600" />
+              <div>
+                <p className="font-medium text-yellow-800">Phone Verification Required</p>
+                <p className="text-sm text-yellow-700">
+                  Verify your phone number to receive job notifications and updates
+                </p>
+              </div>
+            </div>
+            <Link to="/verify-phone">
+              <Button variant="accent" size="sm">
+                Verify Phone
+              </Button>
+            </Link>
+          </Card.Content>
+        </Card>
+      )}
+
       {/* Stats Cards */}
-      <div className="grid md:grid-cols-4 gap-6 pt-8">
-        {stats.map(({ label, value, icon: Icon, color, link }) => (
+      <div className="grid md:grid-cols-4 gap-6">
+        {stats.map(({ label, value, color, link }) => (
           <Link key={label} to={link}>
             <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <Card.Content className="flex items-center p-6">
-                <div className={`bg-${color}-100 rounded-full p-3 mr-4`}>
-                  <Icon className={`h-6 w-6 text-${color}-600`} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{label}</p>
-                  <p className="text-2xl font-bold text-gray-900">{value}</p>
-                </div>
+              <Card.Content className="text-center p-6">
+                <p className={`text-2xl font-bold text-${color}-600`}>{value}</p>
+                <p className="text-sm font-medium text-gray-600">{label}</p>
               </Card.Content>
             </Card>
           </Link>
@@ -118,7 +154,54 @@ const RepDashboard = () => {
       </Card>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent Jobs */}
+        {/* Active Assignments */}
+        <Card>
+          <Card.Header>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">Active Assignments</h2>
+              <Link to="/rep/assignments">
+                <Button variant="ghost" size="sm">
+                  View All
+                </Button>
+              </Link>
+            </div>
+          </Card.Header>
+          <Card.Content>
+            {upcomingAssignments.length === 0 ? (
+              <div className="text-center py-8">
+                <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No active assignments</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {upcomingAssignments.map((assignment) => (
+                  <div key={assignment.id} className="p-4 border border-gray-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium text-gray-900">
+                        {assignment.meetingDetails.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </h3>
+                      <Badge variant="primary" size="sm">
+                        {formatCurrency(assignment.amount)}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600 space-x-4">
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        {new Date(assignment.meetingDetails.dateTime).toLocaleString()}
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        {assignment.meetingDetails.location}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card.Content>
+        </Card>
+
+        {/* Available Jobs */}
         <Card>
           <Card.Header>
             <div className="flex items-center justify-between">
@@ -225,53 +308,6 @@ const RepDashboard = () => {
                 </div>
               )}
             </div>
-          </Card.Content>
-        </Card>
-
-        {/* Active Assignments */}
-        <Card>
-          <Card.Header>
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Active Assignments</h2>
-              <Link to="/rep/assignments">
-                <Button variant="ghost" size="sm">
-                  View All
-                </Button>
-              </Link>
-            </div>
-          </Card.Header>
-          <Card.Content>
-            {upcomingAssignments.length === 0 ? (
-              <div className="text-center py-8">
-                <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No active assignments</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {upcomingAssignments.map((assignment) => (
-                  <div key={assignment.id} className="p-4 border border-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-gray-900">
-                        {assignment.meetingDetails.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                      </h3>
-                      <Badge variant="primary" size="sm">
-                        {formatCurrency(assignment.amount)}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600 space-x-4">
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {new Date(assignment.meetingDetails.dateTime).toLocaleString()}
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {assignment.meetingDetails.location}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </Card.Content>
         </Card>
 

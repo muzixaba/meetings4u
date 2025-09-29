@@ -229,8 +229,8 @@ const ClientEntities = () => {
   const handleSetDefault = (id) => setDefault(id);
 
   return (
-    <div className="mt-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-5xl space-y-6">
+      <div className="flex items-center justify-between mt-6 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Manage Entities</h1>
         </div>

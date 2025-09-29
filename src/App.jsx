@@ -22,6 +22,7 @@ import RepDashboard from './pages/rep/Dashboard';
 import BrowseJobs from './pages/rep/BrowseJobs';
 import RepQuotes from './pages/rep/Quotes';
 import RepAssignments from './pages/rep/Assignments';
+import RepMessages from './pages/rep/Messages';
 import RepEarnings from './pages/rep/Earnings';
 import RepProfile from './pages/rep/Profile';
 
@@ -165,6 +166,14 @@ function App() {
             element={
               <ProtectedRoute userType="rep">
                 <RepAssignments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rep/messages"
+            element={
+              <ProtectedRoute userType="rep">
+                <RepMessages />
               </ProtectedRoute>
             }
           />

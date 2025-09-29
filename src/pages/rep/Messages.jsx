@@ -8,21 +8,22 @@ const mockConversations = [
     id: 'conv_001',
     jobId: 'job_001',
     title: 'Tender Briefing - ABC Company',
-    repName: 'Jane Smith',
-    lastMessage: 'I will arrive at 09:40 to clear security.',
-    unread: 2,
+    clientName: 'John Doe',
+    lastMessage: 'Thanks for confirming your arrival time.',
+    unread: 1,
     messages: [
       { id: 'm1', from: 'rep', text: 'Hi, I have reviewed the documents.', timestamp: '2024-12-12 15:02' },
       { id: 'm2', from: 'client', text: 'Great, please make sure to sign the register.', timestamp: '2024-12-12 15:05' },
       { id: 'm3', from: 'rep', text: 'Will do. I will arrive at 09:40 to clear security.', timestamp: '2024-12-12 15:10' },
+      { id: 'm4', from: 'client', text: 'Thanks for confirming your arrival time.', timestamp: '2024-12-12 15:15' },
     ]
   },
   {
     id: 'conv_002',
     jobId: 'job_002',
     title: 'Site Inspection - XYZ Holdings',
-    repName: 'Jane Smith',
-    lastMessage: 'Do I need to bring PPE or will it be provided?',
+    clientName: 'Sarah Johnson',
+    lastMessage: 'Please bring your own safety boots and hard hat.',
     unread: 0,
     messages: [
       { id: 'm1', from: 'rep', text: 'Do I need to bring PPE or will it be provided?', timestamp: '2024-12-14 10:20' },
@@ -42,23 +43,23 @@ const ConversationItem = ({ conv, active, onClick }) => (
         <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">{conv.unread}</span>
       )}
     </div>
-    <p className="text-xs text-gray-500">Rep: {conv.repName}</p>
+    <p className="text-xs text-gray-500">Client: {conv.clientName}</p>
     <p className="text-sm text-gray-600 truncate">{conv.lastMessage}</p>
   </button>
 );
 
 const MessageBubble = ({ msg }) => (
-  <div className={`flex ${msg.from === 'client' ? 'justify-end' : 'justify-start'} my-2`}>
-    <div className={`${msg.from === 'client' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg px-3 py-2 max-w-[75%]`}
+  <div className={`flex ${msg.from === 'rep' ? 'justify-end' : 'justify-start'} my-2`}>
+    <div className={`${msg.from === 'rep' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg px-3 py-2 max-w-[75%]`}
       title={msg.timestamp}
     >
       <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
-      <p className={`text-[10px] mt-1 ${msg.from === 'client' ? 'text-blue-100' : 'text-gray-500'}`}>{msg.timestamp}</p>
+      <p className={`text-[10px] mt-1 ${msg.from === 'rep' ? 'text-blue-100' : 'text-gray-500'}`}>{msg.timestamp}</p>
     </div>
   </div>
 );
 
-const ClientMessages = () => {
+const RepMessages = () => {
   const [conversations, setConversations] = React.useState(mockConversations);
   const [activeId, setActiveId] = React.useState(mockConversations[0].id);
   const [input, setInput] = React.useState('');
@@ -70,7 +71,7 @@ const ClientMessages = () => {
     if (!input.trim() && !attachment) return;
     const newMsg = {
       id: 'm' + Date.now(),
-      from: 'client',
+      from: 'rep',
       text: input + (attachment ? `\n[Attachment: ${attachment.name}]` : ''),
       timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
     };
@@ -81,11 +82,7 @@ const ClientMessages = () => {
 
   return (
     <div className="max-w-5xl space-y-6">
-      <div className="flex items-center justify-between mt-6 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-6">Messages</h1>
       <Card>
         <Card.Content>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -103,7 +100,7 @@ const ClientMessages = () => {
               <div className="flex items-center justify-between p-3 border-b bg-gray-50">
                 <div>
                   <h2 className="font-semibold text-gray-900">{activeConv.title}</h2>
-                  <p className="text-xs text-gray-500">Rep: {activeConv.repName} · Job: {activeConv.jobId}</p>
+                  <p className="text-xs text-gray-500">Client: {activeConv.clientName} · Job: {activeConv.jobId}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-3 bg-white">
@@ -141,4 +138,4 @@ const ClientMessages = () => {
   );
 };
 
-export default ClientMessages;
+export default RepMessages;

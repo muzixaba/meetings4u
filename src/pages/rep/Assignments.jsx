@@ -119,7 +119,7 @@ const RepAssignments = () => {
     });
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl space-y-6">
       <div className="mt-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Assignments</h1>
       </div>

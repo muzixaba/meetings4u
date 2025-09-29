@@ -37,28 +37,43 @@ const Avatar = ({
 
   const baseClasses = `${sizeClasses[size]} rounded-full object-cover ${className}`;
 
-  // If we have a valid image source, show the image
-  if (src) {
+  // State to track if image failed to load
+  const [imageError, setImageError] = React.useState(false);
+
+  // If we have a valid image source and it hasn't failed, show the image
+  if (src && !imageError) {
     return (
       <img
         src={src}
         alt={alt}
         className={baseClasses}
-        onError={(e) => {
-          // If image fails to load, hide it and let fallback show
-          e.target.style.display = 'none';
+        onError={() => {
+          setImageError(true);
         }}
       />
     );
   }
 
-  // Fallback: Show first letter of name if available
+  // Fallback: Show initials from first and last name if available
   if (fallbackText && fallbackText.trim()) {
-    const firstLetter = fallbackText.trim().charAt(0).toUpperCase();
+    const names = fallbackText.trim().split(' ');
+    let initials = '';
+
+    if (names.length >= 2) {
+      // Get first letter of first name and first letter of last name
+      initials = names[0].charAt(0).toUpperCase() + names[names.length - 1].charAt(0).toUpperCase();
+    } else if (names.length === 1) {
+      // If only one name, get first two letters or just first letter
+      const singleName = names[0];
+      initials = singleName.length >= 2
+        ? singleName.charAt(0).toUpperCase() + singleName.charAt(1).toUpperCase()
+        : singleName.charAt(0).toUpperCase();
+    }
+
     return (
-      <div className={`${baseClasses} bg-primary-100 flex items-center justify-center`}>
-        <span className={`font-semibold text-primary-700 ${textSizes[size]}`}>
-          {firstLetter}
+      <div className={`${baseClasses} bg-blue-100 flex items-center justify-center`}>
+        <span className={`font-semibold text-blue-700 ${textSizes[size]}`}>
+          {initials}
         </span>
       </div>
     );
