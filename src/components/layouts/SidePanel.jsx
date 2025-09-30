@@ -45,7 +45,6 @@ const SidePanel = () => {
     if (user.type === 'client') {
       return [
         { label: 'Dashboard', path: '/client/dashboard', icon: Home },
-        { label: 'Post Job', path: '/client/post-job', icon: Calendar },
         { label: 'My Jobs', path: '/client/jobs', icon: FileText },
         { label: 'Entities', path: '/client/entities', icon: Users },
         { label: 'Messages', path: '/client/messages', icon: MessageSquare }

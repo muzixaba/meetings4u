@@ -59,7 +59,7 @@ const JobDetails = () => {
   };
 
   return (
-    <div className="max-w-5xl space-y-6">
+    <div className="max-w-5xl space-y-6 mt-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -327,7 +327,7 @@ const JobDetails = () => {
             <Card.Header>
               <h3 className="text-lg font-semibold text-gray-900">Actions</h3>
             </Card.Header>
-            <Card.Content className="space-y-3">
+            <Card.Content className="space-y-4">
               {job.status === 'open' && (
                 <>
                   <Button variant="outline" className="w-full">

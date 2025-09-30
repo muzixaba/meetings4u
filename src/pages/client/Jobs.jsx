@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Plus, Eye, Users } from 'lucide-react';
+import { Calendar, MapPin, Plus, Eye, Users, User } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Select from '../../components/ui/Select';
 import { useJobsStore } from '../../stores/jobsStore';
 import { useEntitiesStore } from '../../stores/entitiesStore';
-import { meetingTypes } from '../../data/mockData';
+import { meetingTypes, mockUsers } from '../../data/mockData';
 
 const ClientJobs = () => {
   const { jobs, getQuotesForJob } = useJobsStore();
@@ -55,6 +55,16 @@ const ClientJobs = () => {
   const getEntityName = (entityId) => {
     const entity = entities.find(e => e.id === entityId);
     return entity ? entity.name : 'Unknown Entity';
+  };
+
+  const getRepName = (repId) => {
+    const rep = mockUsers.find(u => u.id === repId);
+    return rep ? rep.profile.name : 'Unknown Rep';
+  };
+
+  const getAcceptedQuote = (jobId) => {
+    const quotes = getQuotesForJob(jobId);
+    return quotes.find(q => q.status === 'accepted');
   };
 
   return (
@@ -121,6 +131,7 @@ const ClientJobs = () => {
           {filteredJobs.map((job) => {
             const quotes = getQuotesForJob(job.id);
             const entityName = getEntityName(job.selectedEntityId);
+            const acceptedQuote = getAcceptedQuote(job.id);
 
             return (
               <Card key={job.id} className="hover:shadow-md transition-shadow">
@@ -149,6 +160,12 @@ const ClientJobs = () => {
                           <Users className="h-4 w-4 mr-2" />
                           Entity: {entityName}
                         </div>
+                        {acceptedQuote && (
+                          <div className="flex items-center text-sm text-gray-600">
+                            <User className="h-4 w-4 mr-2" />
+                            Rep: <span className="font-medium ml-1">{getRepName(acceptedQuote.repId)}</span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center space-x-4 text-sm">
@@ -194,40 +211,6 @@ const ClientJobs = () => {
         </div>
       )}
 
-      {/* Stats Summary */}
-      {filteredJobs.length > 0 && (
-        <Card>
-          <Card.Header>
-            <h3 className="text-lg font-semibold text-gray-900">Summary</h3>
-          </Card.Header>
-          <Card.Content>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-gray-900">{filteredJobs.length}</p>
-                <p className="text-sm text-gray-600">Total Jobs</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-accent-600">
-                  {filteredJobs.filter(j => j.status === 'open').length}
-                </p>
-                <p className="text-sm text-gray-600">Open</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-primary-600">
-                  {filteredJobs.filter(j => j.status === 'in_progress').length}
-                </p>
-                <p className="text-sm text-gray-600">In Progress</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">
-                  {filteredJobs.filter(j => j.status === 'completed').length}
-                </p>
-                <p className="text-sm text-gray-600">Completed</p>
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
-      )}
     </div>
   );
 };

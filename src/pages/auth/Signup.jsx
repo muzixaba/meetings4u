@@ -61,7 +61,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto mt-8">
       <Card>
         <Card.Header>
           <div className="text-center">
