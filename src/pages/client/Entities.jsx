@@ -27,12 +27,12 @@ const EntityRow = ({ entity, onEdit, onDelete, onSetDefault }) => (
         {entity.vatNumber && <span>VAT: {entity.vatNumber}</span>}
       </div>
     </div>
-    <div className="flex items-center gap-2 mt-3 md:mt-0">
+    <div className="flex flex-col gap-2 mt-3 md:mt-0 md:min-w-[150px]">
       {!entity.isDefault && (
-        <Button variant="outline" onClick={() => onSetDefault(entity.id)}>Set as Default</Button>
+        <Button variant="outline" className="!border-green-600 !text-green-600 hover:!bg-green-50" onClick={() => onSetDefault(entity.id)}>Set as Default</Button>
       )}
-      <Button variant="ghost" onClick={() => onEdit(entity)}>Edit</Button>
-      <Button variant="danger" onClick={() => onDelete(entity.id)}>Delete</Button>
+      <Button variant="outline" className="!border-gray-400 !text-gray-700 hover:!bg-gray-50" onClick={() => onEdit(entity)}>Edit</Button>
+      <Button variant="outline" className="!border-red-600 !text-red-600 hover:!bg-red-50" onClick={() => onDelete(entity.id)}>Delete</Button>
     </div>
   </div>
 );
