@@ -5,12 +5,13 @@ import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { useEntitiesStore } from '../../stores/entitiesStore';
 import { entityTypes } from '../../data/mockData';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 
 const DefaultBadge = () => (
   <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 border border-green-200">Default</span>
 );
 
-const EntityRow = ({ entity, onEdit, onDelete, onSetDefault }) => (
+const EntityRow = ({ entity, onEdit, onDelete }) => (
   <div className="flex flex-col md:flex-row md:items-center md:justify-between border rounded-lg p-4 bg-white">
     <div className="space-y-1">
       <div className="flex items-center">
@@ -28,11 +29,14 @@ const EntityRow = ({ entity, onEdit, onDelete, onSetDefault }) => (
       </div>
     </div>
     <div className="flex flex-col gap-2 mt-3 md:mt-0 md:min-w-[150px]">
-      {!entity.isDefault && (
-        <Button variant="outline" className="!border-green-600 !text-green-600 hover:!bg-green-50" onClick={() => onSetDefault(entity.id)}>Set as Default</Button>
-      )}
-      <Button variant="outline" className="!border-gray-400 !text-gray-700 hover:!bg-gray-50" onClick={() => onEdit(entity)}>Edit</Button>
-      <Button variant="outline" className="!border-red-600 !text-red-600 hover:!bg-red-50" onClick={() => onDelete(entity.id)}>Delete</Button>
+      <Button variant="outline" className="!border-gray-400 !text-gray-700 hover:!bg-gray-50" onClick={() => onEdit(entity)}>
+        <Pencil className="w-4 h-4 mr-2" />
+        Edit
+      </Button>
+      <Button variant="outline" className="!border-red-600 !text-red-600 hover:!bg-red-50" onClick={() => onDelete(entity.id)}>
+        <Trash2 className="w-4 h-4 mr-2" />
+        Delete
+      </Button>
     </div>
   </div>
 );
@@ -51,6 +55,8 @@ const EntityModal = ({ open, mode, entity, onClose, onSave, error }) => {
     isDefault: false,
   });
 
+  const [errors, setErrors] = React.useState({});
+
   React.useEffect(() => {
     if (entity) {
       setForm({
@@ -66,13 +72,22 @@ const EntityModal = ({ open, mode, entity, onClose, onSave, error }) => {
         isDefault: !!entity.isDefault,
       });
     } else {
-      setForm((prev) => ({ ...prev, isDefault: false }));
+      setForm({
+        name: '',
+        type: 'Private Company',
+        phone: '',
+        email: '',
+        address: '',
+        cipcNumber: '',
+        csdNumber: '',
+        taxNumber: '',
+        vatNumber: '',
+        isDefault: false,
+      });
     }
   }, [entity]);
 
   if (!open) return null;
-
-  const [errors, setErrors] = React.useState({});
 
   const validate = () => {
     const e = {};
@@ -185,7 +200,7 @@ const EntityModal = ({ open, mode, entity, onClose, onSave, error }) => {
 };
 
 const ClientEntities = () => {
-  const { entities, addEntity, updateEntity, deleteEntity, setDefault } = useEntitiesStore();
+  const { entities, addEntity, updateEntity, deleteEntity } = useEntitiesStore();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalMode, setModalMode] = React.useState('create');
   const [editingEntity, setEditingEntity] = React.useState(null);
@@ -226,7 +241,6 @@ const ClientEntities = () => {
     }
   };
 
-  const handleSetDefault = (id) => setDefault(id);
 
   return (
     <div className="max-w-5xl space-y-6">
@@ -234,7 +248,10 @@ const ClientEntities = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Manage Entities</h1>
         </div>
-        <Button variant="primary" onClick={openCreate}>Add New Entity</Button>
+        <Button variant="primary" onClick={openCreate}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Entity
+        </Button>
       </div>
 
       {error && (
@@ -247,7 +264,6 @@ const ClientEntities = () => {
             entity={entity}
             onEdit={openEdit}
             onDelete={handleDelete}
-            onSetDefault={handleSetDefault}
           />
         ))}
       </div>

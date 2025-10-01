@@ -238,47 +238,6 @@ const BrowseJobs = () => {
         )}
       </div>
 
-      {/* Stats Summary */}
-      {filteredJobs.length > 0 && (
-        <Card>
-          <Card.Header>
-            <h3 className="text-lg font-semibold text-gray-900">Job Statistics</h3>
-          </Card.Header>
-          <Card.Content>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{filteredJobs.length}</p>
-                <p className="text-sm text-gray-600">Available Jobs</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary-600">
-                  {filteredJobs.filter(j => j.meetingType === 'tender_briefing').length}
-                </p>
-                <p className="text-sm text-gray-600">Tender Briefings</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-accent-600">
-                  {filteredJobs.filter(j => j.meetingType === 'site_inspection').length}
-                </p>
-                <p className="text-sm text-gray-600">Site Inspections</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-green-600">
-                  {filteredJobs.filter(j => calculateDistance(j) <= 20).length}
-                </p>
-                <p className="text-sm text-gray-600">Within 20km</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-purple-600">
-                  {filteredJobs.filter(j => j.requirements.ppe).length}
-                </p>
-                <p className="text-sm text-gray-600">Require PPE</p>
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
-      )}
-
       {/* Quick Quote Modal Placeholder */}
       {showQuoteModal && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">

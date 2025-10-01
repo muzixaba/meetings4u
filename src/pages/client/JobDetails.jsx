@@ -341,7 +341,7 @@ const JobDetails = () => {
               <Button variant="outline" className="w-full">
                 Download Report
               </Button>
-              <Link to="/client/messages">
+              <Link to="/client/messages" className="block">
                 <Button variant="outline" className="w-full">
                   View Messages
                 </Button>
