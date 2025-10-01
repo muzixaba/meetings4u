@@ -25,6 +25,7 @@ import RepAssignments from './pages/rep/Assignments';
 import RepMessages from './pages/rep/Messages';
 import RepEarnings from './pages/rep/Earnings';
 import RepProfile from './pages/rep/Profile';
+import RepSettings from './pages/rep/Settings';
 
 // Protected route component
 const ProtectedRoute = ({ children, userType = null }) => {
@@ -190,6 +191,14 @@ function App() {
             element={
               <ProtectedRoute userType="rep">
                 <RepProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rep/settings"
+            element={
+              <ProtectedRoute userType="rep">
+                <RepSettings />
               </ProtectedRoute>
             }
           />

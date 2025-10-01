@@ -744,5 +744,14 @@ export const mockRepProfile = {
       sunday: { available: false, start: null, end: null }
     },
     blockedDates: ["2024-12-25", "2024-12-26", "2025-01-01"]
+  },
+  bankingDetails: {
+    bankName: "First National Bank",
+    accountHolderName: "Jane Smith",
+    accountNumber: "62********89",
+    branchCode: "250655",
+    accountType: "Cheque",
+    verified: true,
+    verifiedAt: "2024-01-20T10:30:00"
   }
 };

@@ -20,7 +20,6 @@ import Badge from '../ui/Badge';
 import Avatar from '../ui/Avatar';
 import { useAuthStore } from '../../stores/authStore';
 import { useUIStore } from '../../stores/uiStore';
-import { useEntitiesStore } from '../../stores/entitiesStore';
 
 const SidePanel = () => {
   const location = useLocation();
@@ -31,7 +30,6 @@ const SidePanel = () => {
     setSidePanelOpen,
     getUnreadNotificationsCount
   } = useUIStore();
-  const { selectedEntity } = useEntitiesStore();
 
   const unreadCount = getUnreadNotificationsCount();
 
@@ -139,16 +137,6 @@ const SidePanel = () => {
             )}
           </div>
 
-          {/* Entity Selector for Clients */}
-          {user.type === 'client' && selectedEntity && !sidePanel.collapsed && (
-            <div className="mt-3 p-2 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-600">Current Entity</p>
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {selectedEntity.name}
-              </p>
-            </div>
-          )}
-
           {/* Phone verification warning */}
           {!user.phone_verified && !sidePanel.collapsed && (
             <div className="mt-3">
@@ -234,7 +222,13 @@ const SidePanel = () => {
               {!sidePanel.collapsed && 'Help Center'}
             </button>
 
-            <button
+            <Link
+              to={user.type === 'rep' ? '/rep/settings' : '#'}
+              onClick={() => {
+                if (window.innerWidth < 1024) {
+                  closeSidePanel();
+                }
+              }}
               className={`
                 flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors
                 ${sidePanel.collapsed ? 'justify-center' : ''}
@@ -243,7 +237,7 @@ const SidePanel = () => {
             >
               <Settings className={`h-5 w-5 ${sidePanel.collapsed ? '' : 'mr-3'}`} />
               {!sidePanel.collapsed && 'Settings'}
-            </button>
+            </Link>
 
             <button
               onClick={handleLogout}
