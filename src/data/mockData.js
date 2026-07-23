@@ -5,7 +5,7 @@ export const mockUsers = [
     email: "client@example.com",
     type: "client",
     verified: true,
-    phone_verified: false,
+    phone_verified: true,
     profile: {
       name: "John Doe",
       phone: "+27123456789",

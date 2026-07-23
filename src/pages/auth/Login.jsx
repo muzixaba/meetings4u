@@ -47,6 +47,13 @@ const Login = () => {
       <Card>
         <Card.Header>
           <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <img
+                src="/images/meetings4u-logo.svg"
+                alt="Meetings4U"
+                className="h-12"
+              />
+            </div>
             <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
             <p className="text-gray-600 mt-2">Sign in to your account</p>
           </div>

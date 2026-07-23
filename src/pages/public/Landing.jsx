@@ -10,6 +10,13 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="text-center py-16">
         <div className="max-w-4xl mx-auto">
+          <div className="flex justify-center mb-8">
+            <img
+              src="/images/meetings4u-logo.svg"
+              alt="Meetings4U"
+              className="h-16 md:h-20"
+            />
+          </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Professional Meeting
             <span className="text-primary-500"> Representation</span>

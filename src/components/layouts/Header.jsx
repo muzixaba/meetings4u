@@ -66,9 +66,11 @@ const Header = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center">
-              <div className="bg-primary-500 text-white px-3 py-2 rounded-lg font-bold text-xl">
-                M4U
-              </div>
+              <img
+                src="/images/meetings4u-logo.svg"
+                alt="Meetings4U"
+                className="h-8"
+              />
             </Link>
           </div>
 
